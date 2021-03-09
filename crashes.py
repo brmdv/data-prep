@@ -15,12 +15,18 @@ if __name__ == "__main__":
         df = pd.read_csv(
             argv[1], parse_dates=[[0, 1]], dtype={"zip_code": pd.UInt16Dtype()}
         )
+        # fix some column names
         df.rename(
-            columns={"crash_date_crash_time": "crash_datetime"}, inplace=True
-        )  # simplify date column name
+            columns={
+                "crash_date_crash_time": "crash_datetime",
+                "vehicle_type_code1": "vehicle_type_code_1",
+                "vehicle_type_code2": "vehicle_type_code_2",
+            },
+            inplace=True,
+        )
 
         # Remove unnecasary columns
         df.drop(["location"], axis=1, inplace=True)
-        
+
         # write output file
         df.to_csv(argv[2])
