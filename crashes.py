@@ -7,6 +7,44 @@ Usage:
 import pandas as pd
 from sys import argv
 
+
+def filter_vehicle(veh) -> str:
+    """Simple function to categorize vehicle types 
+
+    :param veh: [description]
+    """
+
+    # passthrought NaNs
+    if type(veh) != str:
+        return veh
+
+    veh = veh.lower()  # lowercase
+    # remove spaces and common characters to decrease ambiguity
+    veh = veh.replace(" ", "").replace("-", "").replace("/", "")
+    # categories
+    groups = {
+        "large": [
+            "truck",
+            "uhaul",
+            "freight",
+            "pickup",
+            "bus",
+            "ambulance",
+            "van",
+            "tractor",
+            "fire",
+            "camper",
+        ],
+        "normal": ["car", "passenger", "pas", "sedan", "taxi"],
+        "two-wheel": ["bicycle", "bike", "motorcycle", "scooter", "vespa"],
+    }
+    for cat in groups:
+        for name in groups[cat]:
+            if name in veh:
+                return cat
+    return "unknown"
+
+
 if __name__ == "__main__":
     if len(argv) != 3:
         print(__doc__)
