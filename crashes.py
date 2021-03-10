@@ -99,5 +99,10 @@ if __name__ == "__main__":
             axis=1,
         )
 
+        # clean up address strings
+        df.loc[:, "on_street_name":"cross_street_name"] = df.loc[
+            :, "on_street_name":"cross_street_name"
+        ].applymap(lambda s: s.strip() if pd.notna(s) else s)
+
         # write output file
         df.to_csv(argv[2])
