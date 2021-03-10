@@ -83,6 +83,21 @@ if __name__ == "__main__":
             ).sum(axis=1)
         # drop vehicle type cols
         df.drop([f"vehicle_type_code_{i}" for i in range(1, 6)], axis=1, inplace=True)
+        # add total vehicle count
+        df["total_number_of_vehicles"] = df.loc[
+            :, "number_of_two-wheel_veh":"number_of_unknown_veh"
+        ].agg(sum, axis=1)
+
+        # Combine all contributing factors in one column
+        df["contributing_factors"] = df.loc[
+            :, "contributing_factor_vehicle_1":"contributing_factor_vehicle_5"
+        ].apply(lambda x: pd.unique(x.dropna()), axis=1)
+        # drop vehicle-specific contr factors
+        df.drop(
+            [f"contributing_factor_vehicle_{i}" for i in range(1, 6)],
+            inplace=True,
+            axis=1,
+        )
 
         # write output file
         df.to_csv(argv[2])
