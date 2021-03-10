@@ -56,6 +56,9 @@ if __name__ == "__main__":
         df = pd.read_csv(
             argv[1], parse_dates=[[0, 1]], dtype={"zip_code": pd.UInt16Dtype()}
         )
+        # set index
+        df.set_index("collision_id", inplace=True)
+
         # fix some column names
         df.rename(
             columns={
@@ -66,13 +69,20 @@ if __name__ == "__main__":
             inplace=True,
         )
 
-        # Remove unnecasary columns
+        # Remove unnecessary columns
         df.drop(["location"], axis=1, inplace=True)
 
         # clean up vehicle types
         df.loc[:, "vehicle_type_code_1":"vehicle_type_code_5"] = df.loc[
             :, "vehicle_type_code_1":"vehicle_type_code_5"
         ].applymap(filter_vehicle)
+        # change this to a count of the types
+        for cat in ["two-wheel", "normal", "large", "unknown"]:
+            df[f"number_of_{cat}_veh"] = (
+                df.loc[:, "vehicle_type_code_1":"vehicle_type_code_5"] == cat
+            ).sum(axis=1)
+        # drop vehicle type cols
+        df.drop([f"vehicle_type_code_{i}" for i in range(1, 6)], axis=1, inplace=True)
 
         # write output file
         df.to_csv(argv[2])
