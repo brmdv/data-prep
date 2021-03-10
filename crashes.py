@@ -39,6 +39,9 @@ def filter_vehicle(veh) -> str:
         "two-wheel": ["bicycle", "bike", "motorcycle", "scooter", "vespa"],
     }
     for cat in groups:
+        if veh == cat:
+            # passthrough if already category
+            return veh
         for name in groups[cat]:
             if name in veh:
                 return cat
@@ -65,6 +68,11 @@ if __name__ == "__main__":
 
         # Remove unnecasary columns
         df.drop(["location"], axis=1, inplace=True)
+
+        # clean up vehicle types
+        df.loc[:, "vehicle_type_code_1":"vehicle_type_code_5"] = df.loc[
+            :, "vehicle_type_code_1":"vehicle_type_code_5"
+        ].applymap(filter_vehicle)
 
         # write output file
         df.to_csv(argv[2])
