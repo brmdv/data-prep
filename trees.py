@@ -34,7 +34,7 @@ if __name__ == "__main__":
         ].replace(to_replace=["No", "Yes"], value=[0, 1])
 
         # consolidate option columns
-        df["curb_loc"].replace(["OnCurb", "OffsetCurb"], [1, 0], inplace=True)
+        df["curb_loc"].replace(["OnCurb", "OffsetFromCurb"], [1, 0], inplace=True)
         df["sidewalk"].replace(["Damage", "NoDamage"], [1, 0], inplace=True)
         df.rename(
             columns={"curb_loc": "is_OnCurb", "sidewalk": "sidewalk_damaged"},
@@ -45,7 +45,9 @@ if __name__ == "__main__":
         df["is_dead"] = status.iloc[:, 0]
         df["is_stump"] = status.iloc[:, 1]
 
-        df["health"].replace(["Good", "Fair", "Poor"], [2, 1, 0], inplace=True)
+        df["health"].replace(
+            ["Good", "Fair", "Poor"], [2, 1, 0], inplace=True,
+        )
 
         df["steward"].replace(
             ["None", "1or2", "3or4", "4orMore"], [0, 1, 3, 4], inplace=True
