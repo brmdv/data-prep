@@ -58,5 +58,9 @@ if __name__ == "__main__":
             inplace=True,
         )
 
+        # drop nan values
+        df["guards"].fillna("Unsure", inplace=True)  # in this case, we can fill it in
+        df.dropna()
+
         # write output file
         df.to_csv(argv[2])
