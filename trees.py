@@ -27,12 +27,14 @@ if __name__ == "__main__":
         df["latitude"] = (
             df["the_geom"].apply(lambda x: x[7:-1].split(" ")[1]).astype("float64")
         )
-        df.drop("the_geom", axis=1, inplace=True)
+
+        # drop redundant columns
+        df.drop(["the_geom", "state", "x_sp", "y_sp"], axis=1, inplace=True)
 
         # Change yes/no values to 1/0
-        df.loc[:, "root_stone":"brnch_othe"].replace(
-            to_replace=["No", "Yes"], value=[0, 1], inplace=True
-        )
+        df.loc[:, "root_stone":"brnch_othe"] = df.loc[
+            :, "root_stone":"brnch_othe"
+        ].replace(to_replace=["No", "Yes"], value=[0, 1])
 
         # write output file
         df.to_csv(argv[2])
