@@ -29,5 +29,10 @@ if __name__ == "__main__":
         )
         df.drop("the_geom", axis=1, inplace=True)
 
+        # Change yes/no values to 1/0
+        df.loc[:, "root_stone":"brnch_othe"].replace(
+            to_replace=["No", "Yes"], value=[0, 1], inplace=True
+        )
+
         # write output file
         df.to_csv(argv[2])
